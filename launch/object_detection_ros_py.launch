@@ -1,0 +1,10 @@
+<launch>
+  <node pkg="object_detection_ros_py" name="object_detection_ros_py" type="object_detection_ros_py.py" output="screen">
+  <!--param name="subscribed_topic" type="string" value="/dji_sdk/image_raw"/-->
+  <param name="subscribed_topic" type="string" value="/my_video"/>
+  <param name="show_video_flag" type="bool" value="true"/>
+  <param name="save_video_flag" type="bool" value="true"/>
+  <param name="video_file_name" type="string" value="/home/zj/ros_workspace/src/object_detection_ros_py/video/out.avi"/>
+  <param name="rate" type="double" value="30.0"/>
+  </node>
+</launch>
