@@ -4,13 +4,8 @@ import six.moves.urllib as urllib
 import sys
 import tarfile
 import tensorflow as tf
-import zipfile
-
-from collections import defaultdict
-from io import StringIO
 from matplotlib import pyplot as plt
-from PIL import Image
-
+import skimage.io
 
 # Env setup
 # # This is needed to display the images.
@@ -73,12 +68,6 @@ categories = label_map_util.convert_label_map_to_categories(label_map, max_num_c
 category_index = label_map_util.create_category_index(categories)
 
 
-# Helper code
-def load_image_into_numpy_array(image):
-    (im_width, im_height) = image.size
-    return np.array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)
-
-
 # Detection
 # For the sake of simplicity we will use only 2 images:
 # image1.jpg
@@ -94,12 +83,30 @@ IMAGE_SIZE = (12, 8)
 
 
 class DetectImage(object):
-    detection_graph = ''
-    sess = ''
+    detection_graph = 'graph'
+    sess = 'sess'
+    image_tensor = 'Tensor'
+    # Each box represents a part of the image where a particular object was detected.
+    detection_boxes = 'Tensor'
+    # Each score represent how level of confidence for each of the objects.
+    # Score is shown on the result image, together with the class label.
+    detection_scores = 'Tensor'
+    detection_classes = 'Tensor'
+    num_detections = 'Tensor'
 
     def __init__(self):
-        self.detection_graph = detection_graph.as_default()
+        # Definite and open graph and sess
+        self.detection_graph = detection_graph
         self.sess = tf.Session(graph=detection_graph)
+        # Definite input and output Tensors for detection_graph
+        self.image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
+        # Each box represents a part of the image where a particular object was detected.
+        self.detection_boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')
+        # Each score represent how level of confidence for each of the objects.
+        # Score is shown on the result image, together with the class label.
+        self.detection_scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
+        self.detection_classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
+        self.num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
 
     def __del__(self):
         self.sess.close()
@@ -107,18 +114,11 @@ class DetectImage(object):
     def run_detect(self, image_np):
         # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
         image_np_expanded = np.expand_dims(image_np, axis=0)
-        image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
-        # Each box represents a part of the image where a particular object was detected.
-        boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
-        # Each score represent how level of confidence for each of the objects.
-        # Score is shown on the result image, together with the class label.
-        scores = detection_graph.get_tensor_by_name('detection_scores:0')
-        classes = detection_graph.get_tensor_by_name('detection_classes:0')
-        num_detections = detection_graph.get_tensor_by_name('num_detections:0')
+
         # Actual detection.
-        (boxes, scores, classes, num_detections) = self.sess.run(
-            [boxes, scores, classes, num_detections],
-            feed_dict={image_tensor: image_np_expanded})
+        (boxes, scores, classes, num) = self.sess.run(
+            [self.detection_boxes, self.detection_scores, self.detection_classes, self.num_detections],
+            feed_dict={self.image_tensor: image_np_expanded})
         # Visualization of the results of a detection.
         vis_util.visualize_boxes_and_labels_on_image_array(
             image_np,
@@ -137,10 +137,11 @@ if __name__ == '__main__':
     PATH_TO_TEST_IMAGES_DIR = os.path.join(OBJECT_DETECTION_PATH, 'test_images')
     TEST_IMAGE_PATHS = [os.path.join(PATH_TO_TEST_IMAGES_DIR, 'image{}.jpg'.format(i)) for i in range(1, 3)]
     for image_path in TEST_IMAGE_PATHS:
-        image = Image.open(image_path)
+        # image = Image.open(image_path)
         # the array based representation of the image will be used later in order to prepare the
         # result image with boxes and labels on it.
-        image_np = load_image_into_numpy_array(image)
+        # image_np = load_image_into_numpy_array(image)
+        image_np = skimage.io.imread(image_path)
         image_np = di.run_detect(image_np)
 
         plt.figure(figsize=IMAGE_SIZE)
