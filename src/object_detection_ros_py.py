@@ -15,7 +15,7 @@ class DetectVideo(object):
     subscribed_topic = '/my_video'
     # video_output
     show_video_flag = True
-    save_video_flag = True
+    save_video_flag = False
     video_rate = 30.0
     video_output_path = os.path.join(os.path.abspath('../video_output'), 'out.avi')
     VIDEO_WINDOW_NAME = 'video_output'
