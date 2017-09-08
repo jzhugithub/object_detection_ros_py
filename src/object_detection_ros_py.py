@@ -64,8 +64,8 @@ class DetectVideo(object):
             return
         if self.frame_num == 1:
             self.image_hight, self.image_width, channels = self.src.shape
-            self.video = cv2.VideoWriter(self.video_output_path, cv2.cv.CV_FOURCC('M', 'J', 'P', 'G'), self.video_rate,
-                                         (self.image_width, self.image_hight))
+            self.video = cv2.VideoWriter(self.video_output_path, cv2.cv.CV_FOURCC('M', 'J', 'P', 'G'),
+                                         int(self.video_rate), (int(self.image_width), int(self.image_hight)))
         self.frame_num += 1
 
         # detect
