@@ -17,5 +17,5 @@ Contain a class of object_detection named DetectImage.
 **Note**:
 
 1. Some parameters need to modify, you can find them all in DetectVideo class. 
-2. Run the node by `Python object_detection_ros_py.py`, since the python path problem, `rosrun` and `roslaunch` are not support.
+2. Run the node by `Python object_detection_ros_py.py` or `rosrun`
 3. Another rosnode that can publish image stream is needed, for example, video_publisher_py: https://github.com/jzhugithub/video_publisher_py .
