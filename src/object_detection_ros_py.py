@@ -75,7 +75,9 @@ class DetectVideo(object):
 
         # detect
         # self.src_3 = cv2.resize(self.src_3,(160, 120))
+        cv2.cvtColor(self.src, cv2.cv.CV_BGR2RGB, self.src)  # since opencv use bgr, but tensorflow use rbg
         self.dst = self.di.run_detect(self.src)[0]
+        cv2.cvtColor(self.dst, cv2.cv.CV_RGB2BGR, self.dst)  # since opencv use bgr, but tensorflow use rbg
 
         # save and show video_output
         if self.save_video_flag:
