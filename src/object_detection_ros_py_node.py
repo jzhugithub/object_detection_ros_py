@@ -26,7 +26,7 @@ class DetectVideo(object):
     VIDEO_WINDOW_NAME = 'video_output'
     # detect
     # Create DetectImage class
-    OBJECT_DETECTION_PATH = '/home/zj/program/models/object_detection'
+    OBJECT_DETECTION_PATH = '/home/zj/program/models/research/object_detection'
     # Path to frozen detection graph. This is the actual model that is used for the object detection.
     PATH_TO_CKPT = os.path.join(OBJECT_DETECTION_PATH, 'ssd_mobilenet_v1_coco_11_06_2017/frozen_inference_graph.pb')
     # List of the strings that is used to add correct label for each box.
@@ -89,6 +89,6 @@ class DetectVideo(object):
 
 if __name__ == '__main__':
     print('opencv: ' + cv2.__version__)
-    rospy.init_node('object_detection_ros_py', anonymous=True)
+    rospy.init_node('object_detection_ros_py_node', anonymous=True)
     mrd = DetectVideo()
     rospy.spin()

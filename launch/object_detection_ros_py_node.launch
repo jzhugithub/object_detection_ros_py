@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="object_detection_ros_py" name="object_detection_ros_py_node" type="object_detection_ros_py_node.py" output="screen">
+  </node>
+</launch>
